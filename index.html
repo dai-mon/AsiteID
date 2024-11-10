@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsiteID</title>
+    <link rel="icon" href="icono.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+    <style>
+        /* Estilos de fondo */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #E6007E;
+            /* Rosa mexicano */
+            color: #000000;
+            margin: 0;
+            height: 100%;
+        }
+
+        h1,
+        h2,
+        p {
+            color: #000000;
+        }
+
+        /* Estilos para el menú lateral */
+        #sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #fff;
+            color: #E6007E;
+            /* Rosa mexicano para los textos */
+            padding-top: 20px;
+            transition: 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            /* Asegura que el menú esté sobre el contenido */
+        }
+
+        #sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #E6007E;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #FFC0CB;
+            /* Rosa claro */
+        }
+
+        #main-content {
+            padding: 30px;
+            transition: margin-left 0.3s;
+            margin-left: 0;
+            background-color: #fff;
+            /* Fondo blanco para el contenido principal */
+            border-radius: 10px;
+            box-shadow: 0 0 px rgba(0, 0, 0, 0.1);
+            z-index: 1;
+            /* Asegura que el contenido esté detrás del menú */
+        }
+
+        /* Botón de menú redondo */
+        #menuBtn,
+        #closeBtn {
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #fff;
+            /* Fondo blanco */
+            color: #E6007E;
+            /* Texto en rosa mexicano */
+            border: none;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+        }
+
+        #menuBtn {
+            left: 20px;
+        }
+
+        #closeBtn {
+            right: 20px;
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #main-content.open {
+            margin-left: 250px;
+        }
+
+        /* Galería de imágenes desplazable */
+        .gallery-container {
+            width: 100%;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .gallery {
+            display: flex;
+            width: 700%;
+            animation: slide 250s infinite;
+        }
+
+        .gallery img {
+            width: 14.28%;
+            height: auto;
+        }
+
+        @keyframes slide {
+            0% {
+                transform: translateX(0);
+            }
+
+            14.28% {
+                transform: translateX(-100%);
+            }
+
+            28.56% {
+                transform: translateX(-200%);
+            }
+
+            42.84% {
+                transform: translateX(-300%);
+            }
+
+            57.12% {
+                transform: translateX(-400%);
+            }
+
+            71.4% {
+                transform: translateX(-500%);
+            }
+
+            85.68% {
+                transform: translateX(-600%);
+            }
+        }
+
+        #titulo {
+            /* Fondo transparente, sin el recuadro azul */
+            text-align: center;
+            /* Centra el texto */
+            padding: 40px 20px;
+            /* Espaciado superior e inferior reducido */
+            border-radius: 10px;
+            /* Bordes redondeados */
+            margin: 20px auto;
+            /* Margen para centrar y separar */
+            max-width: 600px;
+            /* Ancho máximo para controlar el tamaño */
+        }
+
+        #titulo h1 {
+            font-family: 'Arial', sans-serif;
+            /* Fuente sans-serif moderna */
+            font-size: 3.2rem;
+            /* Tamaño de letra ligeramente mayor */
+            font-weight: bold;
+            /* Negrita para darle más presencia */
+            letter-spacing: 3px;
+            /* Espaciado entre letras para mayor impacto */
+            text-transform: uppercase;
+            /* Hace el texto en mayúsculas */
+            margin: 0;
+            /* Elimina el margen por defecto */
+            color: #333;
+            /* Color gris oscuro */
+            position: relative;
+            /* Necesario para el ajuste de posición */
+            top: -10px;
+            /* Sube la letra un poco */
+            animation: fadeIn 1.5s ease-in-out;
+            /* Animación de aparición */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        #titulo:hover {
+            /* Eliminar el efecto de sombra o transformación */
+            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+            /* Sin sombra */
+        }
+    </style>
+</head>
+
+<body>
+    <button id="menuBtn">&#9776;</button>
+    <div id="sidebar">
+        <button id="closeBtn">&times;</button>
+        <a href="index.html">Inicio</a>
+        <a href="camara.html">Escanear CURP</a>
+        <a href="subir.html">Subir archivo</a>
+        <a href="tabla_curps.html">Curps Guardados</a>
+        <a href="info.html">Localidades cercanas</a>
+    </div>
+
+    <div id="main-content">
+        <div id="titulo">
+            <h1>AsiteID</h1>
+        </div>
+        <div id="infoApp">
+            <h2>Información de la Aplicación</h2>
+            <hr>
+            <p>AsiteID te permite escanear tu CURP mediante un QR, almacenar y gestionar tus registros, y conocer
+                información de localidades cercanas. Una herramienta útil para tu identificación y para las comunidades.</p>
+            <hr>
+        </div>
+
+        <!-- Galería de imágenes desplazable -->
+        <div class="gallery-container">
+            <div class="gallery">
+                <img src="comunidad1.jpg" alt="Comunidad 1">
+                <img src="escuela1.jpg" alt="Escuela 1">
+                <img src="comunidad2.jpg" alt="Comunidad 2">
+                <img src="escuela3.jpg" alt="Escuela 2">
+                <img src="comunidad3.jpg" alt="Comunidad 3">
+                <img src="escuela2.jpg" alt="Escuela 3">
+                <img src="comunidad4.jpg" alt="Comunidad 4">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+    </script>
+</body>
+
+</html>

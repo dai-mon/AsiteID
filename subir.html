@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsiteID-SubirArchivo</title>
+    <link rel="icon" href="icono.png" type="image/png">
+    <script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #video {
+            display: none;
+            width: 320px;
+            height: 240px;
+        }
+
+        #status {
+            margin-top: 20px;
+            color: green;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        #video {
+            display: none;
+            width: 320px;
+            height: 240px;
+        }
+
+        #status {
+            margin-top: 20px;
+            color: green;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Estilos de fondo */
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background-color: #E6007E;
+            /* Rosa mexicano */
+            color: #000000;
+            margin: 0;
+            height: 100%;
+        }
+
+        h1,
+        h2,
+        p {
+            color: #000000;
+        }
+
+        /* Estilos para el menú lateral */
+        #sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #fff;
+            color: #E6007E;
+            /* Rosa mexicano para los textos */
+            padding-top: 20px;
+            transition: 0.3s;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            /* Asegura que el menú esté sobre el contenido */
+        }
+
+        #sidebar a {
+            padding: 15px 25px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #E6007E;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #FFC0CB;
+            /* Rosa claro */
+        }
+
+        /* Asegura que el contenido principal esté debajo del menú */
+        #main-content {
+            padding: 30px;
+            transition: margin-left 0.3s;
+            margin-left: 0;
+            background-color: #fff;
+            /* Fondo blanco para el contenido principal */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 500;
+            /* Valor menor que el z-index del menú */
+        }
+
+        /* Botón de menú redondo */
+        #menuBtn,
+        #closeBtn {
+            font-size: 30px;
+            cursor: pointer;
+            padding: 10px;
+            background-color: #fff;
+            /* Fondo blanco */
+            color: #E6007E;
+            /* Texto en rosa mexicano */
+            border: none;
+            border-radius: 50%;
+            position: absolute;
+            top: 20px;
+        }
+
+        #menuBtn {
+            left: 20px;
+        }
+
+        #closeBtn {
+            right: 20px;
+        }
+
+        #sidebar.open {
+            left: 0;
+        }
+
+        #main-content.open {
+            margin-left: 250px;
+        }
+
+        /* Botón con puntas redondeadas */
+        #startCamera {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #E6007E;
+            /* Rosa mexicano */
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            /* Puntas redondeadas */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #startCamera:hover {
+            background-color: #FFC0CB;
+            /* Rosa claro */
+        }
+
+        /* Estilos adicionales */
+        #video {
+            display: none;
+            width: 320px;
+            height: 240px;
+        }
+
+        #status {
+            margin-top: 20px;
+            color: green;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Estilos para el contenedor del CURP */
+        #curpContainer {
+            margin-top: 20px;
+        }
+
+        #saveCurp {
+
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #FFC0CB;
+            /* Rosa mexicano */
+            color:rgb(31, 30, 30);
+            border: none;
+            border-radius: 20px;
+            /* Puntas redondeadas */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        #saveCurp:hover {
+            background-color: #e08f9d;
+            /* Rosa claro */
+        }
+
+        /* Aplica estilo al botón de input tipo file */
+        #fileInput {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+            /* Lo saca del flujo visual */
+        }
+
+        #fileInput+label {
+            background-color: #FFC0CB;
+            /* Fondo verde */
+            color: rgb(31, 30, 30);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            display: inline-block;
+            /* Alineado */
+        }
+
+        #fileInput+label:hover {
+            background-color: #e08f9d;
+            /* Cambio de color al pasar el mouse */
+        }
+        #titulo {
+            position: absolute;
+            top: 37px;
+            /* Ajusta la distancia desde la parte superior */
+            right: 26px;
+            /* Ajusta la distancia desde el borde derecho */
+            text-align: right;
+            /* Alinea el texto a la derecha */
+            margin: 0;
+            padding: 0;
+            z-index: 1000;
+            /* Asegura que el título esté encima de otros elementos */
+        }
+
+        #titulo h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.9 rem;
+            /* Tamaño de letra ligeramente mayor */
+            font-weight: bold;
+            letter-spacing: 3px;
+            /* Espaciado entre letras */
+            text-transform: uppercase;
+            /* Hace el texto en mayúsculas */
+            margin: 0;
+            /* Elimina el margen por defecto */
+            color: #333;
+            /* Color gris oscuro */
+            position: relative;
+            /* Ajuste de posición */
+            top: -5px;
+            /* Sube la letra un poco */
+            animation: fadeIn 1.5s ease-in-out;
+            /* Animación de aparición */
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Botón para abrir el menú -->
+    <button id="menuBtn">&#9776;</button>
+
+    <!-- Menú lateral -->
+    <div id="sidebar">
+        <!-- Botón para cerrar el menú -->
+        <button id="closeBtn">&times; </button>
+        <a href="index.html">Inicio</a>
+        <a href="camara.html">Escanear CURP</a>
+        <a href="subir.html">Subir archivo</a>
+        <a href="tabla_curps.html">Curps Guardados</a>
+        <a href="info.html">Localidades cercanas</a>
+    </div>
+    <div id="main-content"></div>
+    <div id="titulo">
+        <h1>AsiteID</h1>
+    </div>
+    <h2>Subir QR de CURP</h2>
+    <div id="startCamera"></div>
+    <video id="video" autoplay></video>
+    <input type="file" id="fileInput" accept="image/*">
+    <label for="fileInput">Seleccionar archivo</label>
+    <p id="status"></p>
+    <div id="curpContainer" class="hidden">
+        <p>CURP detectada: <span id="curpText"></span></p>
+        <button id="saveCurp">Guardar CURP</button>
+    </div>
+
+    <script>
+        const video = document.getElementById('video');
+        const status = document.getElementById('status');
+        const curpContainer = document.getElementById('curpContainer');
+        const curpText = document.getElementById('curpText');
+        let detectedCurp = "";
+
+        document.getElementById('startCamera').addEventListener('click', async () => {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+            video.srcObject = stream;
+            video.style.display = 'block';
+            scanCamera();
+        });
+
+        async function scanCamera() {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+
+            video.addEventListener('play', () => {
+                const scanInterval = setInterval(() => {
+                    if (video.paused || video.ended) return clearInterval(scanInterval);
+                    canvas.width = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+                    if (code) {
+                        detectedCurp = code.data;
+                        showDetectedCurp(detectedCurp);
+                        video.srcObject.getTracks().forEach(track => track.stop());
+                        video.style.display = 'none';
+                        clearInterval(scanInterval);
+                    }
+                }, 300);
+            });
+        }
+
+        document.getElementById("fileInput").addEventListener("change", function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = function () {
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    context.drawImage(img, 0, 0, img.width, img.height);
+
+                    const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+                    if (code) {
+                        detectedCurp = code.data;
+                        showDetectedCurp(detectedCurp);
+                    } else {
+                        status.textContent = "No se detectó ningún código QR.";
+                    }
+                };
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function showDetectedCurp(curp) {
+            curpText.textContent = curp;
+            curpContainer.classList.remove("hidden");
+            status.textContent = "";
+        }
+
+        document.getElementById('saveCurp').addEventListener('click', () => {
+            let curps = JSON.parse(localStorage.getItem('curps')) || [];
+            curps.push(detectedCurp);
+            localStorage.setItem('curps', JSON.stringify(curps));
+            window.location.href = 'tabla_curps.html';
+        });
+        // Procesar CURP y redirigir
+        function processCurp(curp) {
+            status.textContent = `CURP detectada: ${curp}`;
+
+            // Redirige a la página de consulta de CURP con el CURP detectado
+            const curpUrl = `https://www.gob.mx/curp/?curp=${curp}`;
+            window.open(curpUrl, '_blank'); // Abre en una nueva pestaña
+        }
+        const menuBtn = document.getElementById('menuBtn');
+        const closeBtn = document.getElementById('closeBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            sidebar.classList.remove('open');
+        });
+
+    </script>
+</body>
+
+</html>
